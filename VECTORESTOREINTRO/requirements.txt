@@ -1,0 +1,9 @@
+langchain
+langgraph
+langchain-google-genai==4.4.0
+python-dotenv==1.0.1
+
+fastapi
+langserve
+sse-starlette
+langchain-core

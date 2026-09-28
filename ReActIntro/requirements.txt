@@ -1,0 +1,18 @@
+# Çalışan ana omurga
+langchain
+langgraph
+langchain-core
+langchain-google-genai==4.4.0
+python-dotenv==1.0.1
+sse-starlette
+langchain-community>=0.3.0
+langchain-text-splitters>=0.3.0
+langchain-chroma>=0.1.4
+beautifulsoup4>=4.12.3
+faiss-cpu>=1.8.0.post1
+tiktoken>=0.7.0
+tqdm>=4.66.4
+tavily-python==0.3.4
+pytest==8.2.2
+langchain-tavily
+langchain-classic
