@@ -216,3 +216,30 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ROS 2 Workspace Dizinleri (Colcon)
+build/
+install/
+log/
+
+# Python Önbellek Dosyaları
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Sanal Ortamlar (Virtual Environment)
+venv/
+.venv/
+env/
+.env_dir/
+
+# Gizli Anahtarlar ve Konfigürasyonlar (API Key'ler için kritik)
+.env
+*.env
+secrets.yaml
+
+# IDE ve İşletim Sistemi Dosyaları
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
