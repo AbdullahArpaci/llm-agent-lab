@@ -16,7 +16,9 @@ class Drone:
             "air_speed" : None,
             "roll" : None,
             "pitch" : None,
-            "yaw" : None
+            "yaw" : None,
+            "arm" : None,
+            "mode" : None,
         }
 
     def connect(self) -> bool:
