@@ -243,3 +243,22 @@ secrets.yaml
 .idea/
 .DS_Store
 Thumbs.db
+
+
+# ArduPilot SITL / MAVProxy çıktıları
+logs/
+*.BIN
+LASTLOG.TXT
+*.tlog
+*.tlog.raw
+mav*.parm
+eeprom.bin
+terrain/
+
+# ROS 2
+build/
+install/
+log/
+
+# Editör
+.vscode/
