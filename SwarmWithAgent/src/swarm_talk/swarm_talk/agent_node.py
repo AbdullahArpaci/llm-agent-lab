@@ -4,6 +4,9 @@ from swarm_talk_interfaces.srv import Takeoff
 import time
 from std_srvs.srv import Trigger
 import threading
+from swarm_talk_interfaces.msg import DronState
+
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -16,7 +19,7 @@ from datetime import datetime
 from langchain_core.tools import tool
 from langgraph.checkpoint.sqlite import SqliteSaver
 
-llm = ChatGoogleGenerativeAI(model="gemini-3.6-flash", temperature=0)
+llm = ChatGoogleGenerativeAI(model="gemini-3.6-flash")
 
 
 system_prompt = """You are an operator assistant controlling a swarm of 3 drones in a Gazebo simulation. You carry out the user's natural-language commands by calling the provided tools.
@@ -49,7 +52,35 @@ class AgentNode(Node):
         super().__init__("agent_node")
         self.takeoff_cli = self.create_client(Takeoff, "/swarm/takeoff")
         self.land_cli = self.create_client(Trigger, "/swarm/land")
+        self.states = {}  # drone_id -> (mesaj, alınma zamanı)
+        self.drone_ids = [1,2,3]
+        for d in self.drone_ids:
+            self.create_subscription(
+                DronState, f"/drone_{d}/state",
+                lambda msg, d=d: self._on_state(msg, d), 10)
 
+    def _on_state(self, msg, drone_id):
+        self.states[drone_id] = (msg, time.monotonic())
+
+    def status_text(self):
+        lines = []
+        now = time.monotonic()
+        for d in self.drone_ids:
+            if d not in self.states:
+                lines.append(f"drone_{d}: veri yok")
+                continue
+            msg, received = self.states[d]
+            line = (f"drone_{d}: mod {msg.mode}, "
+                    f"{'arm edilmiş' if msg.armed else 'arm edilmemiş'}, "
+                    f"irtifa {msg.position.z:.1f} m, "
+                    f"konum x={msg.position.x:.1f} y={msg.position.y:.1f}, "
+                    f"bağlantı {'var' if msg.link_ok else 'YOK'}")
+            age = now - received
+            if age > 2.0:
+                line += f" (UYARI: veri {age:.0f} sn eski)"
+            lines.append(line)
+        return "\n".join(lines)
+    
     def call(self, client, request, timeout=20.0):
         if not client.wait_for_service(timeout_sec=2.0):
             return "Hata: sürü yöneticisine ulaşılamadı."
@@ -81,8 +112,14 @@ def swarm_land() -> str:
     belirttiğinde bu aracı kullan."""
     req = Trigger.Request()
     return node.call(node.land_cli, req)
+@tool
+def swarm_status() -> str:
+    """Tüm drone'ların anlık durumunu döndürür: uçuş modu, arm durumu,
+    irtifa (m), konum (m) ve bağlantı. Kullanıcı drone'ların durumunu
+    sorduğunda kullan; durumu asla tahmin etme."""
+    return node.status_text()
 
-tools = [swarm_land,swarm_takeoff]
+tools = [swarm_land,swarm_takeoff,swarm_status]
 def main(args = None):
     global node
     rclpy.init(args=args)

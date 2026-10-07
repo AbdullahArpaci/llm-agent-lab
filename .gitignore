@@ -243,7 +243,7 @@ secrets.yaml
 .idea/
 .DS_Store
 Thumbs.db
-
+memory.db
 
 # ArduPilot SITL / MAVProxy çıktıları
 logs/
