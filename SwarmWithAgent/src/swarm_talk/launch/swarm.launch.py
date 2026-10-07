@@ -4,8 +4,9 @@ from ament_index_python.packages import get_package_share_directory
 import os
 import yaml
 
-def create_drones(count : int,udp_port : str,ip_address : str, drone_id : int = 1):
+def create_drones(count: int, udp_port: str, ip_address: str, ref_lat: float, ref_lon: float, ref_alt: float):
     drones = []
+    drone_id = 1
     for _ in range(count):
         connection_string = f"udp:{ip_address}:{udp_port}"
         node = Node(
@@ -15,6 +16,9 @@ def create_drones(count : int,udp_port : str,ip_address : str, drone_id : int = 
             parameters=[{
                 "connection_string": connection_string,
                 "drone_id": drone_id,
+                "ref_lat" : ref_lat,
+                "ref_lon" : ref_lon,
+                "ref_alt" : ref_alt
             }])
         udp_port += 10
         drone_id +=1
@@ -35,7 +39,7 @@ def generate_launch_description():
     with open(config) as f:
         data = yaml.safe_load(f)
 
-    drones = create_drones(data["num_drones"],data["base_port"],data["ip_address"])
+    drones = create_drones(data["num_drones"],data["base_port"],data["ip_address"],data["ref_lat"],data["ref_lon"],data["ref_alt"])
     return LaunchDescription([
         *drones,
         Node(

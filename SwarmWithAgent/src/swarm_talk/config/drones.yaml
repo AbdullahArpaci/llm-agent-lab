@@ -1,6 +1,6 @@
 num_drones: 3
 base_port : 14550
 ip_address : 127.0.0.1
-ref_lat: -35.3632619
-ref_lon: 149.1652813
-ref_alt: 594.0
+ref_lat: -35.3632621
+ref_lon: 149.1652814
+ref_alt: 584.14

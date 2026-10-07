@@ -1,0 +1,6 @@
+string name
+float32 spacing
+float32 altitude
+---
+bool success
+string message

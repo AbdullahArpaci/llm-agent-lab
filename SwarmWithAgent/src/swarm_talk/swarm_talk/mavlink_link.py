@@ -181,9 +181,34 @@ class Drone:
 
         return ack.result == mavutil.mavlink.MAV_RESULT_ACCEPTED
 
-    def hearbeat(self):
+    def heartbeat(self):
         if (time.monotonic() - self.last_heartbeat) <= 3:
             self.state["link_ok"] = True
         else:
             self.state["link_ok"] = False
 
+    def land(self) -> bool:
+
+        command = mavutil.mavlink.MAV_CMD_NAV_LAND
+
+        self.conn.mav.command_long_send(
+            self.conn.target_system,
+            self.conn.target_component,
+            command,
+            0,
+            0, 0, 0, 0, 0, 0, 0
+        )
+
+        ack = self.conn.recv_match(
+            type="COMMAND_ACK",
+            blocking=True,
+            timeout=3
+        )
+
+        if ack is None:
+            return False
+
+        if ack.command != command:
+            return False
+
+        return ack.result == mavutil.mavlink.MAV_RESULT_ACCEPTED
