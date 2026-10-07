@@ -29,7 +29,8 @@ setup(
     entry_points={
         'console_scripts': [
             "drone_adapter = swarm_talk.drone_adapter:main",
-            "swarm_manager = swarm_talk.swarm_manager:main"
+            "swarm_manager = swarm_talk.swarm_manager:main",
+            "agent_node = swarm_talk.agent_node:main"
         ],
     },
 )
