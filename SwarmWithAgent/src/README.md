@@ -28,7 +28,6 @@ Her katman yalnızca bir altındakini tanır: agent drone'ların nasıl uçtuğu
 | `drone_adapter.py` | Her drone için bir örnek. Durumu yayınlar, takeoff/land servislerini ve setpoint topic'ini sunar. |
 | `swarm_manager.py` | Sürü servisleri. İrtifa sınırlarını doğrular, istekleri tüm drone'lara paralel gönderir, sonuçları birleştirir. |
 | `agent_node.py` | LLM'i (Gemini) ROS servislerine bağlayan araçlar ve konuşma döngüsü. |
-| `formation.py` | Formasyon slotları ve Macar algoritmasıyla atama. **Henüz sisteme entegre değil.** |
 
 ## Gereksinimler
 
@@ -148,19 +147,18 @@ SwarmWithAgent/
     │   └── swarm_talk/
     │       ├── agent_node.py
     │       ├── drone_adapter.py
-    │       ├── formation.py
     │       ├── frames.py
     │       ├── mavlink_link.py
     │       └── swarm_manager.py
     └── swarm_talk_interfaces/
         ├── msg/   DronState.msg, Setpoint.msg
-        └── srv/   Takeoff.srv, SetFormation.srv
+        └── srv/   Takeoff.srv
 ```
 
 ## Bilinen sınırlamalar
 
 - Yalnızca simülasyonda test edildi.
-- Formasyon modülü hazır, ancak `/swarm/set_formation` servisi ve agent aracı henüz yok.
+- Formasyon desteği henüz yok.
 - Tekil drone komutları agent'a açık değil.
 - Sürü kalkışında bir drone başarısız olursa diğerleri otomatik olarak indirilmiyor; sonuç yalnızca raporlanıyor.
 - `link_ok` durumu yayınlanıyor ama henüz otomatik bir güvenlik tepkisine bağlı değil.
@@ -168,7 +166,7 @@ SwarmWithAgent/
 
 ## Yol haritası
 
-- [ ] Formasyon servisi ve agent aracı (`line`, `triangle`, `circle`)
+- [ ] Formasyonlar (`line`, `triangle`, `circle`): slot üretimi, Macar algoritmasıyla atama, servis ve agent aracı
 - [ ] Kalkış başarısızlığında geri alma (diğer drone'ları indirme)
 - [ ] Bağlantı kopmasına otomatik tepki
 - [ ] Bileşik komutlar ("kalkın ve üçgen olun")
